@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head><title>Register</title></head>
-<body>
-  <h2>Register</h2>
-
-  {% with messages = get_flashed_messages() %}
+  <head>
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/css/register.css" />
+  </head>
+  <body>
+    
+    {% with messages = get_flashed_messages() %}
     {% if messages %}
       <ul>
       {% for message in messages %}
@@ -14,53 +16,90 @@
     {% endif %}
   {% endwith %}
 
-  <form method="POST">
-    <label>Role:</label>
-    <select name="role" id="role" onchange="toggleFields()">
-      <option value="patient">Patient</option>
-      <option value="doctor">Doctor</option>
-    </select><br>
+    <nav>
+      <div class="logo">Samart Curapath</div>
+      <div class="nav-right">
+        <ul>
+          <li>Home</li>
+          <li>Home</li>
+          <li>Home</li>
+          <li>Home</li>
+          <li>Home</li>
+          <li>Home</li>
+        </ul>
+      </div>
+    </nav>
 
-    <label>Name:</label>
-    <input type="text" name="name" required><br>
+    <main>
+      <div class="container">
+        <div class="title">
+          Register | <span class="sub-title">SMART CURAPATH</span>
+        </div>
+        <form method="POST">
+          <label>Role:</label>
+          <select name="role" id="role" onchange="toggleFields()">
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option></select
+          ><br />
 
-    <label>Username:</label>
-    <input type="text" name="username" required><br>
+          <label>Name:</label>
+          <input type="text" name="name" required /><br />
 
-    <label>Password:</label>
-    <input type="password" name="password" required><br>
+          <label>Username:</label>
+          <input type="text" name="username" required /><br />
 
-    <div id="patientFields">
-      <label>Gender:</label>
-      <select name="gender">
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-      </select><br>
+          <label>Password:</label>
+          <input type="password" name="password" required /><br />
 
-      <label>Age:</label>
-      <input type="number" name="age"><br>
-    </div>
+          <div id="patientFields">
 
-    <div id="doctorFields" style="display:none;">
-      <label>Specialization:</label>
-      <input type="text" name="specialization"><br>
+            <div class="patientField1" >
+              <label>Gender:</label>
+              <select name="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
 
-      <label>Experience (years):</label>
-      <input type="number" name="experience"><br>
-    </div>
+            <div>
+              <label>Age:</label>
+              <input type="number" name="age" />
+            </div>
 
-    <button type="submit">Register</button>
-  </form>
+          </div>
 
-  <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+          <div id="doctorFields" style="display: none">
+            <label>Specialization:</label>
+            <input class="patientField1"  type="text" name="specialization" /><br />
 
-  <script>
-    function toggleFields() {
-      const role = document.getElementById('role').value;
-      document.getElementById('patientFields').style.display = role === 'patient' ? 'block' : 'none';
-      document.getElementById('doctorFields').style.display = role === 'doctor' ? 'block' : 'none';
-    }
-    window.onload = toggleFields;
-  </script>
-</body>
+            <label>Experience (years):</label>
+            <input class="patientField1"  type="number" name="experience" /><br />
+
+            <label >Available time [ from ] :</label>
+            <input class="patientField1"  type="time" name="availableTime" /> <br>
+
+            <label>Available time [ to ] :</label>
+            <input class="patientField1"  type="time" name="availableTime" /><br />
+          </div>
+
+          <button type="submit">Register</button>
+        </form>
+
+        <p class="paragraph" >
+          Already have an account? <a href="{{ url_for('login') }}">Login</a>
+        </p>
+      </div>
+    </main>
+
+    <script>
+      function toggleFields() {
+        const role = document.getElementById("role").value;
+        document.getElementById("patientFields").style.display =
+          role === "patient" ? "block" : "none";
+        document.getElementById("doctorFields").style.display =
+          role === "doctor" ? "block" : "none";
+      }
+      window.onload = toggleFields;
+    </script>
+  </body>
 </html>

@@ -1,36 +1,64 @@
 <!DOCTYPE html>
-<html>
-<head><title>Login</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Smart Curapath</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
 <body>
-  <h2>Login</h2>
 
+  <!-- Flash Messages -->
   {% with messages = get_flashed_messages() %}
     {% if messages %}
-      <ul>
-      {% for message in messages %}
-        <li style="color:red;">{{ message }}</li>
-      {% endfor %}
+      <ul class="flash-messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
       </ul>
     {% endif %}
   {% endwith %}
 
-  <form method="POST">
-    <label>Role:</label>
-    <select name="role">
-      <option value="patient">Patient</option>
-      <option value="doctor">Doctor</option>
-      <option value="admin">Admin</option>
-    </select><br>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">Smart Curapath</div>
+    <div class="nav-right">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Doctors</a></li>
+        <li><a href="#">Login</a></li>
+        <li><a href="#">Register</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <label>Username:</label>
-    <input type="text" name="username" required><br>
+  <!-- Main Login Form -->
+  <main>
+    <div class="container">
+      <div class="title">LOG IN | <span class="sub-title">SMART CURAPATH</span></div>
+      <form method="POST">
+        <label for="role">Role:</label>
+        <select name="role" id="role" required>
+          <option value="patient">Patient</option>
+          <option value="doctor">Doctor</option>
+          <option value="admin">Admin</option>
+        </select><br />
 
-    <label>Password:</label>
-    <input type="password" name="password" required><br>
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required><br />
 
-    <button type="submit">Login</button>
-  </form>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required><br />
 
-  <p>Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+        <button type="submit">Login</button>
+      </form>
+
+      <p class="paragraph">
+        Don't have an account? <a href="{{ url_for('register') }}">Register</a>
+      </p>
+    </div>
+  </main>
+
 </body>
 </html>

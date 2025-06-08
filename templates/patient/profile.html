@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Profile</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #eef2f7;
+      margin: 0; padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #3466f2;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+    main {
+      max-width: 500px;
+      margin: 3rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-top: 0;
+      color: #3466f2;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    form label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      background-color: #3466f2;
+      color: white;
+      border: none;
+      padding: 0.75rem 0;
+      font-size: 1.1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #254ecf;
+    }
+    nav {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    nav a {
+      color: #3466f2;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .flash {
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+    .flash.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .flash.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .flash.info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+        /* Fade-in for container */
+    .fade-in {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.8s forwards ease-out;
+    }
+
+    @keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    }
+
+    /* Input focus glow */
+    input[type=text], input[type=password], textarea, select {
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    outline: none;
+    }
+    input[type=text]:focus,
+    input[type=password]:focus,
+    textarea:focus,
+    select:focus {
+    border-color: #254ecf;
+    box-shadow: 0 0 8px rgba(52, 102, 242, 0.6);
+    }
+
+    /* Button ripple effect container */
+    button {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #3466f2;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.2rem;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+    }
+    button:hover {
+    background-color: #254ecf;
+    }
+
+  </style>
+</head>
+<body>
+
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Fade-in animation for main form container
+    const main = document.querySelector("main");
+    main.style.opacity = 0;
+    main.style.transition = "opacity 0.8s ease-out";
+    requestAnimationFrame(() => {
+      main.style.opacity = 1;
+    });
+
+    // Smooth scrolling for nav links
+    document.querySelectorAll("nav a").forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const href = link.getAttribute("href");
+        if (href.startsWith("#")) {
+          document.querySelector(href).scrollIntoView({ behavior: "smooth" });
+        } else {
+          // Normal navigation
+          window.location.href = href;
+        }
+      });
+    });
+
+    // Input focus animations
+    const inputs = document.querySelectorAll("input[type=text], input[type=password]");
+    inputs.forEach(input => {
+      input.style.transition = "box-shadow 0.3s ease, border-color 0.3s ease";
+
+      input.addEventListener("focus", () => {
+        input.style.borderColor = "#254ecf";
+        input.style.boxShadow = "0 0 8px rgba(52, 102, 242, 0.6)";
+      });
+
+      input.addEventListener("blur", () => {
+        input.style.borderColor = "#ccc";
+        input.style.boxShadow = "none";
+      });
+    });
+
+    // Button ripple effect on click
+    const button = document.querySelector("button");
+    button.style.position = "relative";
+    button.style.overflow = "hidden";
+
+    button.addEventListener("click", e => {
+      const ripple = document.createElement("span");
+      ripple.style.position = "absolute";
+      ripple.style.borderRadius = "50%";
+      ripple.style.backgroundColor = "rgba(255,255,255,0.6)";
+      ripple.style.width = ripple.style.height = "100px";
+      ripple.style.left = `${e.clientX - button.getBoundingClientRect().left - 50}px`;
+      ripple.style.top = `${e.clientY - button.getBoundingClientRect().top - 50}px`;
+      ripple.style.transform = "scale(0)";
+      ripple.style.opacity = "1";
+      ripple.style.pointerEvents = "none";
+      ripple.style.transition = "transform 0.6s ease, opacity 0.6s ease";
+
+      button.appendChild(ripple);
+
+      requestAnimationFrame(() => {
+        ripple.style.transform = "scale(3)";
+        ripple.style.opacity = "0";
+      });
+
+      ripple.addEventListener("transitionend", () => {
+        ripple.remove();
+      });
+    });
+
+    // Clear new password field smoothly on form submission
+    const form = document.querySelector("form");
+    form.addEventListener("submit", () => {
+      const newPasswordInput = document.querySelector("#new_password");
+      if (newPasswordInput.value) {
+        newPasswordInput.style.transition = "background-color 0.5s ease";
+        newPasswordInput.style.backgroundColor = "#d4edda"; // subtle green flash
+        setTimeout(() => {
+          newPasswordInput.value = "";
+          newPasswordInput.style.backgroundColor = "";
+        }, 500);
+      }
+    });
+  });
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Apply fade-in to all containers with class fade-in
+  document.querySelectorAll(".fade-in").forEach(el => {
+    el.style.opacity = 0;
+    el.style.transform = "translateY(10px)";
+    el.style.animation = "fadeInUp 0.8s forwards ease-out";
+  });
+
+  // Ripple effect on buttons
+  document.querySelectorAll("button").forEach(button => {
+    button.addEventListener("click", e => {
+      const ripple = document.createElement("span");
+      const rect = button.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.position = "absolute";
+      ripple.style.borderRadius = "50%";
+      ripple.style.backgroundColor = "rgba(255,255,255,0.6)";
+      ripple.style.width = ripple.style.height = size + "px";
+      ripple.style.left = (e.clientX - rect.left - size/2) + "px";
+      ripple.style.top = (e.clientY - rect.top - size/2) + "px";
+      ripple.style.transform = "scale(0)";
+      ripple.style.opacity = "1";
+      ripple.style.pointerEvents = "none";
+      ripple.style.transition = "transform 0.6s ease, opacity 0.6s ease";
+
+      button.appendChild(ripple);
+      requestAnimationFrame(() => {
+        ripple.style.transform = "scale(3)";
+        ripple.style.opacity = "0";
+      });
+      ripple.addEventListener("transitionend", () => ripple.remove());
+    });
+  });
+
+  // Smooth scroll for nav links with # anchors
+  document.querySelectorAll("nav a[href^='#']").forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      document.querySelector(link.getAttribute("href")).scrollIntoView({ behavior: "smooth" });
+    });
+  });
+});
+</script>
+
+</script>
+
+  <header>
+    <h1>Edit Profile</h1>
+  </header>
+
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        value="{{ user.username }}"
+        required
+        autocomplete="off"
+      />
+
+      <label for="current_password">Current Password</label>
+      <input
+        type="password"
+        id="current_password"
+        name="current_password"
+        required
+        autocomplete="current-password"
+      />
+
+      <label for="new_password">New Password (leave blank to keep current)</label>
+      <input
+        type="password"
+        id="new_password"
+        name="new_password"
+        autocomplete="new-password"
+        placeholder="New password"
+      />
+
+      <button type="submit">Update Profile</button>
+    </form>
+
+    <nav>
+      <a href="{{ url_for('patient_dashboard') }}">Back to Dashboard</a> |
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+  </main>
+</body>
+</html>
