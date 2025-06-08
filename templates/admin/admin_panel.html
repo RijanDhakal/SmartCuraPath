@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><title>Admin Panel</title></head>
+<body>
+  <h2>Admin Dashboard</h2>
+  <p>Logged in as: {{ session.get('name') }} (admin)</p>
+  <a href="{{ url_for('logout') }}">Logout</a>
+
+  <h3>All Users</h3>
+  <table border="1">
+    <tr>
+      <th>Role</th>
+      <th>Name</th>
+      <th>Username</th>
+      <th>Additional Info</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.role }}</td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.username }}</td>
+      <td>
+        {% if user.role == 'patient' %}
+          Gender: {{ user.gender }}<br>
+          Age: {{ user.age }}
+        {% elif user.role == 'doctor' %}
+          Specialization: {{ user.specialization }}<br>
+          Experience: {{ user.experience }} yrs
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
