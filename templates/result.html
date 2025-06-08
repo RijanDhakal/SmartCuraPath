@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Disease Result</title>
+</head>
+<body>
+<h2>Predicted Disease: {{ disease }}</h2>
+<p><strong>Specialty:</strong> {{ info.specialty }}</p>
+<p><strong>Description:</strong> {{ info.description }}</p>
+
+<h3>Precautions</h3>
+<ul>
+    {% for p in info.precautions %}
+        <li>{{ p }}</li>
+    {% else %}
+        <li>No precautions available.</li>
+    {% endfor %}
+</ul>
+
+<h3>Diet Recommendations</h3>
+<ul>
+    {% for d in info.diet %}
+        <li>{{ d }}</li>
+    {% else %}
+        <li>No diet info available.</li>
+    {% endfor %}
+</ul>
+
+<h3>Workout Recommendations</h3>
+<ul>
+    {% for w in info.workout %}
+        <li>{{ w }}</li>
+    {% else %}
+        <li>No workout info available.</li>
+    {% endfor %}
+</ul>
+
+<h3>Medications</h3>
+<ul>
+    {% for m in info.medications %}
+        <li>{{ m }}</li>
+    {% else %}
+        <li>No medications info available.</li>
+    {% endfor %}
+</ul>
+
+<a href="{{ url_for('symptoms') }}">Check another</a> | <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>
