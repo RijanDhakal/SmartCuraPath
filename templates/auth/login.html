@@ -1,53 +1,177 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Login</title>
-    <link rel="stylesheet" href="/static/css/login.css" />
-  </head>
-  <body>
-    <!-- {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul>
-      {% for message in messages %}
-        <li style="color:red;">{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %} -->
-    <nav>
-      <div class="logo">Samart Curapath</div>
-      <div class="nav-right">
-        <ul>
-          <li>Home</li>
-          <li>Home</li>
-          <li>Home</li>
-          <li>Home</li>
-          <li>Home</li>
-          <li>Home</li>
-        </ul>
-      </div>
-    </nav>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #ece9e6, #ffffff);
+    }
 
-    <main>
-      <div class="container">
-        <div class="title" >LOG IN | <span class="sub-title" >SMART CURAPATH</span></div>
-        <form method="POST">
-          <label>Role:</label>
-          <select name="role">
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
-            <option value="admin">Admin</option></select
-          ><br />
-          <label>Username:</label>
-          <input type="text" name="username" required /><br />
-          <label>Password:</label>
-          <input type="password" name="password" required /><br />
-          <button type="submit">Login</button>
-        </form>
-        <p class="paragraph" >
-          Don't have an account? <a href="{{ url_for('register') }}">Register</a>
-        </p>
-      </div>
-    </main>
-  </body>
+    nav {
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .nav-right ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-right ul li {
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .nav-right ul li:hover {
+      color: #1abc9c;
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80vh;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .sub-title {
+      font-size: 16px;
+      color: #888;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #1a242f;
+    }
+
+    .paragraph {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .paragraph a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .paragraph a:hover {
+      text-decoration: underline;
+    }
+
+    .flash-messages {
+      color: red;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Smart Curapath</div>
+    <div class="nav-right">
+      <ul>
+        <li>Home</li>
+        <li>About</li>
+        <li>Services</li>
+        <li>Doctors</li>
+        <li>Contact</li>
+        <li>Help</li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <div class="title">LOG IN | <span class="sub-title">SMART CURAPATH</span></div>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST">
+        <label>Role:</label>
+        <select name="role" required>
+          <option value="patient">Patient</option>
+          <option value="doctor">Doctor</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        <label>Username:</label>
+        <input type="text" name="username" required />
+
+        <label>Password:</label>
+        <input type="password" name="password" required />
+
+        <button type="submit">Login</button>
+      </form>
+
+      <p class="paragraph">
+        Don't have an account? <a href="{{ url_for('register') }}">Register</a>
+      </p>
+    </div>
+  </main>
+
+</body>
 </html>

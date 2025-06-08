@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from model import init_app, user_exists, create_user, validate_user, get_all_users
+from flask_pymongo import PyMongo
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'Prat'
-app.config["MONGO_URI"] = "mongodb://localhost:27017/tertaman"
+app.secret_key = 'your_secret_key'  # change this to a secure key
 
-init_app(app)
+# MongoDB Config
+app.config["MONGO_URI"] = "mongodb://localhost:27017/clinicDB"
+mongo = PyMongo(app)
+users_col = mongo.db.users
+
 
 @app.route('/')
 def index():
@@ -19,7 +23,8 @@ def register():
         username = request.form['username']
         password = request.form['password']
 
-        if user_exists(username):
+        # Check if username already exists
+        if users_col.find_one({'username': username}):
             flash("Username already exists.")
             return redirect(url_for('register'))
 
@@ -27,17 +32,17 @@ def register():
             'role': role,
             'name': name,
             'username': username,
-            'password': password
+            'password': generate_password_hash(password)
         }
 
         if role == 'patient':
-            user_data['gender'] = request.form.get('gender')
-            user_data['age'] = int(request.form.get('age', 0)) or None
+            user_data['gender'] = request.form['gender']
+            user_data['age'] = int(request.form['age']) if request.form['age'] else None
         elif role == 'doctor':
-            user_data['specialization'] = request.form.get('specialization')
-            user_data['experience'] = int(request.form.get('experience', 0)) or None
+            user_data['specialization'] = request.form['specialization']
+            user_data['experience'] = int(request.form['experience']) if request.form['experience'] else None
 
-        create_user(user_data)
+        users_col.insert_one(user_data)
         flash("Registration successful! Please login.")
         return redirect(url_for('login'))
 
@@ -50,8 +55,8 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        user = validate_user(role, username, password)
-        if user:
+        user = users_col.find_one({'username': username, 'role': role})
+        if user and check_password_hash(user['password'], password):
             session['user'] = user['username']
             session['name'] = user['name']
             session['role'] = role
@@ -71,28 +76,21 @@ def dashboard():
     if 'user' not in session or session.get('role') == 'admin':
         return redirect(url_for('login'))
 
-    role = session.get('role')
-    name = session.get('name')
-
-    if role == 'patient':
-        return render_template('patient/dashboard.html', name=name, role=role)
-    elif role == 'doctor':
-        return render_template('doctor/dashboard.html', name=name, role=role)
-
-    return render_template('dashboard.html', name=name, role=role)
+    return render_template('dashboard.html', name=session.get('name'), role=session.get('role'))
 
 @app.route('/admin')
 def admin_panel():
     if session.get('role') != 'admin':
         return redirect(url_for('login'))
 
-    users = get_all_users()
+    users = list(users_col.find({}, {'password': 0}))
     return render_template('admin/admin_panel.html', users=users)
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
