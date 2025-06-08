@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><title>Tetra Man</title></head>
+<body>
+    <h1>Enter Features</h1>
+    <form id="predictForm">
+        <input type="text" id="features" placeholder="Comma-separated features"><br><br>
+        <button type="submit">Predict</button>
+    </form>
+    <p id="result"></p>
+
+    <script>
+        document.getElementById('predictForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('features').value;
+            const features = input.split(',').map(Number);
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({features})
+            });
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result);
+        };
+    </script>
+</body>
+</html>
