@@ -107,8 +107,6 @@
         transform: translateY(0);
     }
     }
-
-    /* Input focus glow */
     input[type=text], input[type=password], textarea, select {
     transition: box-shadow 0.3s ease, border-color 0.3s ease;
     border: 1px solid #ccc;
@@ -125,7 +123,6 @@
     box-shadow: 0 0 8px rgba(52, 102, 242, 0.6);
     }
 
-    /* Button ripple effect container */
     button {
     position: relative;
     overflow: hidden;
@@ -148,7 +145,6 @@
 
     <script>
   document.addEventListener("DOMContentLoaded", () => {
-    // Fade-in animation for main form container
     const main = document.querySelector("main");
     main.style.opacity = 0;
     main.style.transition = "opacity 0.8s ease-out";
@@ -156,7 +152,6 @@
       main.style.opacity = 1;
     });
 
-    // Smooth scrolling for nav links
     document.querySelectorAll("nav a").forEach(link => {
       link.addEventListener("click", e => {
         e.preventDefault();
@@ -164,13 +159,11 @@
         if (href.startsWith("#")) {
           document.querySelector(href).scrollIntoView({ behavior: "smooth" });
         } else {
-          // Normal navigation
           window.location.href = href;
         }
       });
     });
 
-    // Input focus animations
     const inputs = document.querySelectorAll("input[type=text], input[type=password]");
     inputs.forEach(input => {
       input.style.transition = "box-shadow 0.3s ease, border-color 0.3s ease";
@@ -186,7 +179,6 @@
       });
     });
 
-    // Button ripple effect on click
     const button = document.querySelector("button");
     button.style.position = "relative";
     button.style.overflow = "hidden";
@@ -216,7 +208,6 @@
       });
     });
 
-    // Clear new password field smoothly on form submission
     const form = document.querySelector("form");
     form.addEventListener("submit", () => {
       const newPasswordInput = document.querySelector("#new_password");
@@ -232,14 +223,12 @@
   });
   <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // Apply fade-in to all containers with class fade-in
   document.querySelectorAll(".fade-in").forEach(el => {
     el.style.opacity = 0;
     el.style.transform = "translateY(10px)";
     el.style.animation = "fadeInUp 0.8s forwards ease-out";
   });
 
-  // Ripple effect on buttons
   document.querySelectorAll("button").forEach(button => {
     button.addEventListener("click", e => {
       const ripple = document.createElement("span");
@@ -265,7 +254,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Smooth scroll for nav links with # anchors
   document.querySelectorAll("nav a[href^='#']").forEach(link => {
     link.addEventListener("click", e => {
       e.preventDefault();

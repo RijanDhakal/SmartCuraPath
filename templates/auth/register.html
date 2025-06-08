@@ -3,21 +3,37 @@
   <head>
     <title>Register</title>
     <link rel="stylesheet" href="/static/css/register.css" />
+    <style>
+      .error-message {
+        color: red;
+        font-size: 0.9em;
+        margin-top: -10px;
+        margin-bottom: 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .error-message.show {
+        opacity: 1;
+      }
+      input.invalid {
+        border: 1px solid red;
+      }
+    </style>
   </head>
   <body>
-    
-    {% with messages = get_flashed_messages() %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       <ul>
-      {% for message in messages %}
-        <li style="color:red;">{{ message }}</li>
+      {% for category, message in messages %}
+        <li style="color: {% if category == 'error' %}red{% else %}green{% endif %};">{{ message }}</li>
       {% endfor %}
       </ul>
     {% endif %}
-  {% endwith %}
+    {% endwith %}
 
     <nav>
-      <div class="logo">Samart Curapath</div>
+      <div class="logo">Smart Curapath</div>
       <div class="nav-right">
         <ul>
           <li>Home</li>
@@ -35,57 +51,60 @@
         <div class="title">
           Register | <span class="sub-title">SMART CURAPATH</span>
         </div>
-        <form method="POST">
+        <form method="POST" id="registerForm">
           <label>Role:</label>
           <select name="role" id="role" onchange="toggleFields()">
             <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option></select
-          ><br />
+            <option value="doctor">Doctor</option>
+          </select><br />
 
           <label>Name:</label>
-          <input type="text" name="name" required /><br />
+          <input type="text" name="name" required value="{{ request.form.name if request.form }}" /><br />
 
           <label>Username:</label>
-          <input type="text" name="username" required /><br />
+          <input type="text" name="username" required value="{{ request.form.username if request.form }}" />
+          <div id="usernameError" class="error-message"></div><br />
+
+          <label>Gender:</label>
+          <select name="gender" required>
+            <option value="">Select gender</option>
+            <option value="male" {% if request.form and request.form.gender == 'male' %}selected{% endif %}>Male</option>
+            <option value="female" {% if request.form and request.form.gender == 'female' %}selected{% endif %}>Female</option>
+          </select><br />
 
           <label>Password:</label>
-          <input type="password" name="password" required /><br />
+          <input type="password" name="password" required />
+          <div id="passwordError" class="error-message"></div><br />
+
+          <label>Confirm Password:</label>
+          <input type="password" name="confirm_password" required />
+          <div id="confirmError" class="error-message"></div><br />
 
           <div id="patientFields">
-
-            <div class="patientField1" >
-              <label>Gender:</label>
-              <select name="gender">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-
-            <div>
+            <div class="patientField1">
               <label>Age:</label>
-              <input type="number" name="age" />
+              <input type="number" name="age" value="{{ request.form.age if request.form }}" />
             </div>
-
           </div>
 
           <div id="doctorFields" style="display: none">
             <label>Specialization:</label>
-            <input class="patientField1"  type="text" name="specialization" /><br />
+            <input class="patientField1" type="text" name="specialization" value="{{ request.form.specialization if request.form }}" /><br />
 
             <label>Experience (years):</label>
-            <input class="patientField1"  type="number" name="experience" /><br />
+            <input class="patientField1" type="number" name="experience" value="{{ request.form.experience if request.form }}" /><br />
 
-            <label >Available time [ from ] :</label>
-            <input class="patientField1"  type="time" name="availableTime" /> <br>
+            <label>Available time [ from ] :</label>
+            <input class="patientField1" type="time" name="availableTimeFrom" value="{{ request.form.availableTimeFrom if request.form }}" /> <br>
 
             <label>Available time [ to ] :</label>
-            <input class="patientField1"  type="time" name="availableTime" /><br />
+            <input class="patientField1" type="time" name="availableTimeTo" value="{{ request.form.availableTimeTo if request.form }}" /><br />
           </div>
 
           <button type="submit">Register</button>
         </form>
 
-        <p class="paragraph" >
+        <p class="paragraph">
           Already have an account? <a href="{{ url_for('login') }}">Login</a>
         </p>
       </div>
@@ -99,6 +118,54 @@
         document.getElementById("doctorFields").style.display =
           role === "doctor" ? "block" : "none";
       }
+      
+      function showError(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.textContent = message;
+        element.classList.add('show');
+        setTimeout(() => {
+          element.classList.remove('show');
+        }, 3000);
+      }
+      
+      document.getElementById('registerForm').addEventListener('submit', function(e) {
+        const username = document.getElementsByName('username')[0].value;
+        const password = document.getElementsByName('password')[0].value;
+        const confirmPassword = document.getElementsByName('confirm_password')[0].value;
+        
+        // Validate username length
+        if (username.length < 4) {
+          e.preventDefault();
+          showError('usernameError', 'Username must be at least 4 characters long');
+          document.getElementsByName('username')[0].classList.add('invalid');
+          return;
+        }
+        
+        // Validate password is alphanumeric
+        const alphanumericRegex = /^[a-zA-Z0-9]+$/;
+        if (!alphanumericRegex.test(password)) {
+          e.preventDefault();
+          showError('passwordError', 'Password must be alphanumeric (letters and numbers only)');
+          document.getElementsByName('password')[0].classList.add('invalid');
+          return;
+        }
+        
+        // Validate password match
+        if (password !== confirmPassword) {
+          e.preventDefault();
+          showError('confirmError', 'Passwords do not match');
+          document.getElementsByName('confirm_password')[0].classList.add('invalid');
+          return;
+        }
+      });
+      
+      // Remove invalid class when user starts typing
+      document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', function() {
+          this.classList.remove('invalid');
+        });
+      });
+      
       window.onload = toggleFields;
     </script>
   </body>

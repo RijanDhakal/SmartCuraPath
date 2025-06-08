@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Symptom Checker</title>
+</head>
+<body>
+<h2>Hello {{ name }}, select your symptoms:</h2>
+<form method="POST">
+    {% for symptom in symptoms %}
+        <label>
+            <input type="checkbox" name="symptoms" value="{{ symptom }}"> {{ symptom.replace('_', ' ').title() }}
+        </label><br>
+    {% endfor %}
+    <button type="submit">Check Disease</button>
+</form>
+</body>
+</html>

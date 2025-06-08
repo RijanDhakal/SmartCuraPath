@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Doctor Profile</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #4f46e5;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 600;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    h2 {
+      color: #4f46e5;
+      margin-bottom: 1rem;
+    }
+    form {
+      background: white;
+      padding: 1.5rem 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+      margin-bottom: 2rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.5rem 0.7rem;
+      margin-bottom: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .btn {
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+      font-size: 1rem;
+    }
+    .btn:hover {
+      background-color: #4338ca;
+    }
+    .toggle-password {
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #4f46e5;
+      user-select: none;
+      margin-left: 0.3rem;
+    }
+    .flash {
+      padding: 1rem 2rem;
+      max-width: 600px;
+      margin: 1rem auto;
+      border-radius: 6px;
+      background-color: #fef3c7;
+      color: #92400e;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Dr. {{ user.name }} - Profile</h1>
+    <nav>
+      <a href="{{ url_for('doctor_dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('doctor_profile') }}">Profile</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+  </header>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>
+    <section>
+      <h2>Edit Profile</h2>
+      <form method="POST" action="{{ url_for('doctor_profile') }}">
+        <input type="hidden" name="edit_profile" value="1" />
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required value="{{ user.name }}" />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required value="{{ user.email }}" />
+
+        <button type="submit" class="btn">Update Profile</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Change Password</h2>
+      <form method="POST" action="{{ url_for('doctor_profile') }}">
+        <input type="hidden" name="change_password" value="1" />
+
+        <label for="current_password">Current Password</label>
+        <input type="password" id="current_password" name="current_password" required />
+        <span class="toggle-password" onclick="togglePassword('current_password', this)">Show</span>
+
+        <label for="new_password">New Password</label>
+        <input type="password" id="new_password" name="new_password" required />
+        <span class="toggle-password" onclick="togglePassword('new_password', this)">Show</span>
+
+        <label for="confirm_password">Confirm New Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" required />
+        <span class="toggle-password" onclick="togglePassword('confirm_password', this)">Show</span>
+
+        <button type="submit" class="btn">Change Password</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    function togglePassword(fieldId, el) {
+      const input = document.getElementById(fieldId);
+      if (input.type === "password") {
+        input.type = "text";
+        el.textContent = "Hide";
+      } else {
+        input.type = "password";
+        el.textContent = "Show";
+      }
+    }
+  </script>
+</body>
+</html>
